@@ -1,0 +1,468 @@
+<html><head><base href="https://websim.creation.engine/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 7 Mathematics: Interactive Graphs and Data Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.5.0/math.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&amp;display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f7fa;
+}
+
+h1, h2, h3 {
+  color: #0374B5;
+}
+
+.objectives {
+  background-color: #e6f3ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #0374B5;
+  color: white;
+}
+
+.interactive-section {
+  background-color: #fff;
+  border: 1px solid #d1e3ff;
+  border-radius: 10px;
+  padding: 30px;
+  margin-top: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#custom-chart-container {
+  margin-top: 30px;
+}
+
+.btn {
+  background-color: #0374B5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #025a8e;
+}
+
+select, input {
+  padding: 8px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.data-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.data-point {
+  display: flex;
+  align-items: center;
+}
+
+.remove-data {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+</style>
+</head>
+<body>
+  <h1>Year 7 Mathematics: Interactive Graphs and Data Analysis</h1>
+
+  <div class="objectives">
+    <h2>Learning Objectives</h2>
+    <ul>
+      <li>Analyse and present data using interactive charts and graphs.</li>
+      <li>Choose the most appropriate graph type for different datasets.</li>
+      <li>Interpret various chart types including bar charts, line graphs, and scatter plots.</li>
+      <li>Create custom charts using real-time data input.</li>
+    </ul>
+  </div>
+
+  <h2>1. Understanding Different Chart Types</h2>
+
+  <p>Different chart types are useful for visualizing data in various ways. Let's explore them using ice cream sales data:</p>
+
+  <table>
+    <tbody><tr>
+      <th>Month</th>
+      <th>Ice Cream Sales (£)</th>
+      <th>Average Temperature (°C)</th>
+    </tr>
+    <tr>
+      <td>January</td>
+      <td>500</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>February</td>
+      <td>600</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>March</td>
+      <td>1000</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>April</td>
+      <td>1500</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <td>May</td>
+      <td>2500</td>
+      <td>18</td>
+    </tr>
+  </tbody></table>
+
+  <h3>Bar Chart</h3>
+  <p>A bar chart is useful for comparing discrete categories. It's ideal for showing ice cream sales across different months, allowing easy comparison between time periods:</p>
+  <div class="chart-container">
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <h3>Line Graph</h3>
+  <p>A line graph is perfect for showing trends over time or continuous data. It's great for visualizing how average temperatures change across months, highlighting the overall trend:</p>
+  <div class="chart-container">
+    <canvas id="lineGraph"></canvas>
+  </div>
+
+  <h3>Scatter Plot</h3>
+  <p>A scatter plot is ideal for showing the relationship between two variables. It can reveal patterns, correlations, or clusters in the data. Here, we use it to explore the relationship between temperature and ice cream sales:</p>
+  <div class="chart-container">
+    <canvas id="scatterPlot"></canvas>
+  </div>
+
+  <h3>Pie Chart</h3>
+  <p>A pie chart is excellent for showing the proportion of different categories within a whole. It's useful for visualizing how ice cream sales are distributed across months as parts of the total sales:</p>
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <div class="interactive-section">
+    <h2>2. Interactive Chart Creator</h2>
+    <p>Create your own chart using randomly generated data:</p>
+    <div>
+      <label for="chart-type">Chart Type:</label>
+      <select id="chart-type">
+        <option value="bar">Bar Chart</option>
+        <option value="line">Line Graph</option>
+        <option value="scatter">Scatter Plot</option>
+        <option value="pie">Pie Chart</option>
+      </select>
+    </div>
+    <div>
+      <button id="generate-random-data" class="btn">Generate Random Data</button>
+      <button id="create-chart" class="btn">Create Chart</button>
+      <button id="display-data" class="btn">Display Data</button>
+    </div>
+    <div id="custom-chart-container">
+      <canvas id="customChart"></canvas>
+    </div>
+    <div id="data-display" style="margin-top: 20px; display: none;">
+      <h3>Current Data:</h3>
+      <pre id="data-content" style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;"></pre>
+    </div>
+</div>
+
+  <div class="interactive-section">
+    <h2>3. Data Analysis Tools</h2>
+    <p>Use these tools to analyze your custom dataset:</p>
+    <div id="analysis-tools">
+      <button id="calculate-mean" class="btn tooltip">Calculate Mean
+        <span class="tooltiptext">Calculates the average of all values</span>
+      </button>
+      <button id="calculate-median" class="btn tooltip">Calculate Median
+        <span class="tooltiptext">Finds the middle value when data is ordered</span>
+      </button>
+      <button id="calculate-range" class="btn tooltip">Calculate Range
+        <span class="tooltiptext">Finds the difference between the largest and smallest values</span>
+      </button>
+    </div>
+    <p id="analysis-result"></p>
+  </div>
+
+  <script>
+    // Data for the charts
+    const months = ['January', 'February', 'March', 'April', 'May'];
+    const sales = [500, 600, 1000, 1500, 2500];
+    const temperatures = [5, 7, 10, 14, 18];
+
+    // Bar Chart
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Ice Cream Sales (£)',
+          data: sales,
+          backgroundColor: '#0374B5'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Sales (£)'
+            }
+          }
+        }
+      }
+    });
+
+    // Line Graph
+    new Chart(document.getElementById('lineGraph'), {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Average Temperature (°C)',
+          data: temperatures,
+          borderColor: '#0374B5',
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Temperature (°C)'
+            }
+          }
+        }
+      }
+    });
+
+    // Scatter Plot
+    new Chart(document.getElementById('scatterPlot'), {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Ice Cream Sales vs Temperature',
+          data: temperatures.map((temp, index) => ({x: temp, y: sales[index]})),
+          backgroundColor: '#0374B5'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Temperature (°C)'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Sales (£)'
+            }
+          }
+        }
+      }
+    });
+
+    // Pie Chart
+    new Chart(document.getElementById('pieChart'), {
+      type: 'pie',
+      data: {
+        labels: months,
+        datasets: [{
+          label: 'Ice Cream Sales (£)',
+          data: sales,
+          backgroundColor: [
+            '#0374B5', '#03B586', '#B58603', '#B50374', '#86B503'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Ice Cream Sales Distribution'
+          }
+        }
+      }
+    });
+
+    // Interactive Chart Creator
+    let customData = [];
+    const createChartBtn = document.getElementById('create-chart');
+    const generateRandomDataBtn = document.getElementById('generate-random-data');
+    const displayDataBtn = document.getElementById('display-data');
+    const chartType = document.getElementById('chart-type');
+    let customChart = null;
+
+    function generateRandomData() {
+      const dataSize = Math.floor(Math.random() * 5) + 5; // Generate 5 to 10 data points
+      customData = Array.from({length: dataSize}, (_, i) => ({
+        label: `Label ${i + 1}`,
+        value: Math.floor(Math.random() * 100)
+      }));
+    }
+
+    generateRandomDataBtn.addEventListener('click', () => {
+      generateRandomData();
+      document.getElementById('data-content').textContent = JSON.stringify(customData, null, 2);
+    });
+
+    createChartBtn.addEventListener('click', () => {
+      if (customData.length === 0) {
+        generateRandomData();
+      }
+
+      if (customChart) {
+        customChart.destroy();
+      }
+
+      const selectedChartType = chartType.value;
+
+      const chartConfig = {
+        type: selectedChartType,
+        data: {
+          labels: customData.map(d => d.label),
+          datasets: [{
+            label: 'Custom Data',
+            data: selectedChartType === 'scatter'
+              ? customData.map((d, i) => ({x: i, y: d.value}))
+              : customData.map(d => d.value),
+            backgroundColor: selectedChartType === 'pie'
+              ? customData.map(() => `#${Math.floor(Math.random()*16777215).toString(16)}`)
+              : '#0374B5'
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              display: selectedChartType !== 'pie'
+            },
+            x: {
+              display: selectedChartType !== 'pie'
+            }
+          }
+        }
+      };
+
+      customChart = new Chart(document.getElementById('customChart'), chartConfig);
+    });
+
+    displayDataBtn.addEventListener('click', () => {
+      const dataDisplay = document.getElementById('data-display');
+      dataDisplay.style.display = dataDisplay.style.display === 'none' ? 'block' : 'none';
+      document.getElementById('data-content').textContent = JSON.stringify(customData, null, 2);
+    });
+
+    // Data Analysis Tools
+    const calculateMean = document.getElementById('calculate-mean');
+    const calculateMedian = document.getElementById('calculate-median');
+    const calculateRange = document.getElementById('calculate-range');
+    const analysisResult = document.getElementById('analysis-result');
+
+    calculateMean.addEventListener('click', () => {
+      const values = customData.map(d => d.value);
+      const mean = math.mean(values);
+      analysisResult.textContent = `The mean of your dataset is: ${mean.toFixed(2)}`;
+    });
+
+    calculateMedian.addEventListener('click', () => {
+      const values = customData.map(d => d.value);
+      const median = math.median(values);
+      analysisResult.textContent = `The median of your dataset is: ${median.toFixed(2)}`;
+    });
+
+    calculateRange.addEventListener('click', () => {
+      const values = customData.map(d => d.value);
+      const range = math.max(values) - math.min(values);
+      analysisResult.textContent = `The range of your dataset is: ${range.toFixed(2)}`;
+    });
+</script>
+</body></html>
